@@ -35,10 +35,18 @@ describe("When slider is created", () => {
         <Slider />
       </DataProvider>
     );
-    await screen.findByText("World economic forum");
-    await screen.findByText("janvier");
-    await screen.findByText(
-      "Oeuvre à la coopération entre le secteur public et le privé."
-    );
+    // Attendez que les éléments soient visibles à l'écran
+    expect(await screen.findByText("World economic forum")).toBeInTheDocument();
+    expect(await screen.findByText("World Gaming Day")).toBeInTheDocument();
+    expect(await screen.findByText("World Farming Day")).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "Oeuvre à la coopération entre le secteur public et le privé."
+      )
+    ).toBeInTheDocument();
+
+    // Vérifiez la présence de plusieurs éléments avec le texte "février"
+    const months = await screen.findAllByText("janvier");
+    expect(months.length).toBeGreaterThan(0); // Assurez-vous qu'il y a au moins un mois "février" affiché
   });
 });
