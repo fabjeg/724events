@@ -11,58 +11,102 @@ const PER_PAGE = 9;
 
 const EventList = () => {
   const { data, error } = useData();
-  const [type, setType] = useState();
+  const [type, setType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const filteredEvents = (
-    (!type
-      ? data?.events
-      : data?.events) || []
-  ).filter((event, index) => {
-    if (
-      (currentPage - 1) * PER_PAGE <= index &&
-      PER_PAGE * currentPage > index
-    ) {
-      return true;
-    }
-    return false;
-  });
+
+  // const filteredEvents = ((!type ? data?.events : data?.events) || []).filter(
+  //   (event, index) => {
+  //     if (
+  //       (currentPage - 1) * PER_PAGE <= index &&
+  //       PER_PAGE * currentPage > index
+  //     ) {
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // ); Le code vérifiait simplement l'index pour la pagination mais ne filtrait pas par type.
+
+  // Filtrer les événements par type sélectionné
+  const filteredByType =
+    data?.events.filter((event) => !type || event.type === type) || [];
+
+  // Pagination des événements filtrés
+  const filteredEvents = filteredByType.slice(
+    (currentPage - 1) * PER_PAGE,
+    currentPage * PER_PAGE
+  );
+
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
-  const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
-  const typeList = new Set(data?.events.map((event) => event.type));
+  // const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
+  // Le nombre de pages était mal calculé, ce qui  donne un résultat incorrect.
+
+  const pageNumber = Math.ceil(filteredByType.length / PER_PAGE);
+  // En utilisant Math.ceil, on s'assure que le nombre de pages est
+  // calculé correctement en fonction du nombre total d'événements
+  //  filtrés (filteredByType), divisés par le nombre d'événements par page (PER_PAGE).
+
+  // const typeList = new Set(data?.events.map((event) => event.type));
+  //  typeList était une Set, ce qui est correct pour obtenir une liste unique de types d'événements, mais
+  //  cela devait être converti en tableau (Array) pour être utilisé correctement dans le composant Select.
+
+  const typeList = Array.from(new Set(data?.events.map((event) => event.type)));
+  //  J'ai enveloppé new Set() dans Array.from() pour convertir cet ensemble en tableau.
+
   return (
     <>
-      {error && <div>An error occured</div>}
+      {error && <div>An error occurred</div>}
       {data === null ? (
         "loading"
       ) : (
         <>
           <h3 className="SelectTitle">Catégories</h3>
           <Select
-            selection={Array.from(typeList)}
+            selection={typeList}
             onChange={(value) => (value ? changeType(value) : changeType(null))}
           />
-          <div id="events" className="ListContainer">
+          <div
+            id="events"
+            className="ListContainer"
+          >
             {filteredEvents.map((event) => (
-              <Modal key={event.id} Content={<ModalEvent event={event} />}>
+              <Modal
+                key={event.id}
+                Content={<ModalEvent event={event} />}
+              >
                 {({ setIsOpened }) => (
                   <EventCard
                     onClick={() => setIsOpened(true)}
                     imageSrc={event.cover}
                     title={event.title}
-                    date={new Date(event.date)}
+                    date={event.date ? new Date(event.date) : null}
                     label={event.type}
                   />
                 )}
               </Modal>
             ))}
           </div>
-          <div className="Pagination">
+          {/* <div className="Pagination">
             {[...Array(pageNumber || 0)].map((_, n) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <a key={n} href="#events" onClick={() => setCurrentPage(n + 1)}>
+              <a
+                href="#events"
+                onClick={() => setCurrentPage(n + 1)}
+              >
+                {n + 1}
+              </a>
+            ))}
+          </div> */}
+          {/* Les éléments de pagination n'avaient pas de clé unique (key),
+            ce qui pouvait générer un avertissement dans la console de développement de React. */}
+          <div className="Pagination">
+            {[...Array(pageNumber)].map((_, n) => (
+              <a
+                key={`page-${n + 1}`} // Utilisation d'une clé basée sur le nombre de la page
+                href="#events"
+                onClick={() => setCurrentPage(n + 1)}
+              >
                 {n + 1}
               </a>
             ))}

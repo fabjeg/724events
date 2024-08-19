@@ -13,15 +13,20 @@ const Select = ({
   label,
   type = "normal",
 }) => {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(null);
   const [collapsed, setCollapsed] = useState(true);
   const changeValue = (newValue) => {
-    onChange();
     setValue(newValue);
-    setCollapsed(newValue);
+    setCollapsed(true);
+    if (onChange) {
+      onChange(newValue);
+    }
   };
   return (
-    <div className={`SelectContainer ${type}`} data-testid="select-testid">
+    <div
+      className={`SelectContainer ${type}`}
+      data-testid="select-testid"
+    >
       {label && <div className="label">{label}</div>}
       <div className="Select">
         <ul>
@@ -32,16 +37,25 @@ const Select = ({
             <>
               {!titleEmpty && (
                 <li onClick={() => changeValue(null)}>
-                  <input defaultChecked={!value} name="selected" type="radio" />{" "}
+                  <input
+                    defaultChecked={!value}
+                    name="selected"
+                    type="radio"
+                    onChange={() => changeValue(null)} // Gestion du changement pour "Toutes"
+                  />{" "}
                   Toutes
                 </li>
               )}
               {selection.map((s) => (
-                <li key={s} onClick={() => changeValue(s)}>
+                <li
+                  key={s}
+                  onClick={() => changeValue(s)}
+                >
                   <input
-                    defaultChecked={value === s}
+                    checked={value === s} // remplacement de Checked par checked
                     name="selected"
                     type="radio"
+                    onChange={() => changeValue(s)} // Gestion du changement pour chaque option
                   />{" "}
                   {s}
                 </li>
@@ -49,7 +63,11 @@ const Select = ({
             </>
           )}
         </ul>
-        <input type="hidden" value={value || ""} name={name} />
+        <input
+          type="hidden"
+          value={value || ""}
+          name={name}
+        />
         <button
           type="button"
           data-testid="collapse-button-testid"
@@ -88,7 +106,7 @@ Select.propTypes = {
   titleEmpty: PropTypes.bool,
   label: PropTypes.string,
   type: PropTypes.string,
-}
+};
 
 Select.defaultProps = {
   onChange: () => null,
@@ -96,6 +114,6 @@ Select.defaultProps = {
   label: "",
   type: "normal",
   name: "select",
-}
+};
 
 export default Select;
