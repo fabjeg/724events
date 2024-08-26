@@ -8,36 +8,30 @@ const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
 
-  const byDateDesc =
-    data?.focus.sort((evtA, evtB) =>
-      new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
-    ) || [];
-  // Ajout d'un tableau vide pour éviter les
-  // erreurs qui pourraient se produire si byDateDesc est undefined ou null
-  // const nextCard = () => {
-  //   setTimeout(
-  //     () => setIndex(index < byDateDesc.length - 1 ? index + 1 : 0),
-  //     5000
-  //   );
-  // };
-  // useEffect(() => {
-  //   nextCard();
-  // });
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prevIndex) =>
-        prevIndex < byDateDesc.length - 1 ? prevIndex + 1 : 0
-      );
-    }, 5000); // Changer d'image toutes les 5 secondes
+  const byDateDesc = data?.focus.sort((evtA, evtB) =>
+    // erreur : ordre décroissant
+    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+  );
 
-    return () => clearInterval(interval); // Nettoyage de l'intervalle lors de la démonstration du composant
-  }, [byDateDesc.length]); // Dépendance à la longueur du tableau des événements
+  const nextCard = () => {
+    // ajout dun if
+    if (byDateDesc) {
+      setTimeout(
+        // ajout d'un -1
+        () => setIndex(index < byDateDesc.length - 1 ? index + 1 : 0),
+        5000
+      );
+    }
+  };
+  useEffect(() => {
+    nextCard();
+  });
 
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
         <div
-          key={event.id}
+          key={event.title}
           className={`SlideCard SlideCard--${
             index === idx ? "display" : "hide"
           }`}
@@ -57,13 +51,14 @@ const Slider = () => {
       ))}
       <div className="SlideCard__paginationContainer">
         <div className="SlideCard__pagination">
-          {byDateDesc?.map((Data, radioIdx) => (
+          {byDateDesc?.map((dot, radioIdx) => (
             <input
-              key={Data.id} // key modifier (éviter répétition)
+              // modification de la key
+              key={dot.title}
               type="radio"
-              checked={index === radioIdx} // Synchronisation du point avec l'index actuel (remplacé idx par index)
               name="radio-button"
-              onChange={() => setIndex(radioIdx)} // Gestionnaire d'événements ajouté
+              checked={index === radioIdx}
+              readOnly
             />
           ))}
         </div>
