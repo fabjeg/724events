@@ -33,7 +33,7 @@ const Form = ({ onSuccess, onError }) => {
       setSending(true);
       // We try to call mockContactApi
       // eslint-disable-next-line no-console
-      console.log(inputValue);
+
       if (
         !inputValue.nom ||
         !inputValue.prenom ||
