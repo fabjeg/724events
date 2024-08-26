@@ -14,17 +14,7 @@ const EventList = () => {
   const [type, setType] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // const filteredEvents = ((!type ? data?.events : data?.events) || []).filter(
-  //   (event, index) => {
-  //     if (
-  //       (currentPage - 1) * PER_PAGE <= index &&
-  //       PER_PAGE * currentPage > index
-  //     ) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
-  // ); Le code vérifiait simplement l'index pour la pagination mais ne filtrait pas par type.
+  //  Le code vérifiait simplement l'index pour la pagination mais ne filtrait pas par type.
 
   // Filtrer les événements par type sélectionné
   const filteredByType =
@@ -88,18 +78,6 @@ const EventList = () => {
               </Modal>
             ))}
           </div>
-          {/* <div className="Pagination">
-            {[...Array(pageNumber || 0)].map((_, n) => (
-              <a
-                href="#events"
-                onClick={() => setCurrentPage(n + 1)}
-              >
-                {n + 1}
-              </a>
-            ))}
-          </div> */}
-          {/* Les éléments de pagination n'avaient pas de clé unique (key),
-            ce qui pouvait générer un avertissement dans la console de développement de React. */}
           <div className="Pagination">
             {[...Array(pageNumber)].map((_, n) => (
               <a

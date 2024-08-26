@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 import Field, { FIELD_TYPES } from "../../components/Field";
 import Select from "../../components/Select";
 import Button, { BUTTON_TYPES } from "../../components/Button";
@@ -41,8 +42,11 @@ const Form = ({ onSuccess, onError }) => {
         !inputValue.type ||
         !inputValue.message
       ) {
-        // eslint-disable-next-line no-alert
-        alert("Veuillez remplir tous les champs !");
+        Swal.fire({
+          title: "Erreur",
+          text: "Veuillez remplir les champs !",
+          confirmButtonText: "ok",
+        });
         setSending(false);
       } else {
         try {
