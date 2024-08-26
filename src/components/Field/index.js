@@ -7,7 +7,14 @@ export const FIELD_TYPES = {
   TEXTAREA: 2,
 };
 
-const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
+const Field = ({
+  type = FIELD_TYPES.INPUT_TEXT,
+  label,
+  name,
+  placeholder,
+  value,
+  onChange,
+}) => {
   let component;
   switch (type) {
     case FIELD_TYPES.INPUT_TEXT:
@@ -17,11 +24,20 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
           name={name}
           placeholder={placeholder}
           data-testid="field-testid"
+          value={value}
+          onChange={onChange}
         />
       );
       break;
     case FIELD_TYPES.TEXTAREA:
-      component = <textarea name={name} data-testid="field-testid" />;
+      component = (
+        <textarea
+          name={name}
+          data-testid="field-testid"
+          value={value}
+          onChange={onChange}
+        />
+      );
       break;
     default:
       component = (
@@ -30,6 +46,8 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
           name={name}
           placeholder={placeholder}
           data-testid="field-testid"
+          value={value}
+          onChange={onChange}
         />
       );
   }
@@ -46,12 +64,16 @@ Field.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
- Field.defaultProps = {
-   label: "",
-   placeholder: "",
-   type: FIELD_TYPES.INPUT_TEXT,
-   name: "field-name",
- }
+Field.defaultProps = {
+  label: "",
+  placeholder: "",
+  type: FIELD_TYPES.INPUT_TEXT,
+  name: "field-name",
+  value: "",
+  onChange: () => {},
+};
 
 export default Field;
