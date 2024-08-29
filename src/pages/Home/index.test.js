@@ -22,8 +22,8 @@ describe("When Form is created", () => {
           bubbles: true,
         })
       );
-      screen.findByText("En cours");
-      screen.findByText("Message envoyé !");
+      await screen.findByText("Envoyer");
+      await screen.findByText("Veuillez remplir les champs !");
     });
   });
 });

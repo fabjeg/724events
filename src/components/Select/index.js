@@ -18,9 +18,7 @@ const Select = ({
   const changeValue = (newValue) => {
     setValue(newValue);
     setCollapsed(true);
-    if (onChange) {
-      onChange(newValue);
-    }
+    onChange(newValue);
   };
   return (
     <div
@@ -52,7 +50,7 @@ const Select = ({
                   onClick={() => changeValue(s)}
                 >
                   <input
-                    checked={value === s} // remplacement de Checked par checked
+                    checked={value === s}
                     name="selected"
                     type="radio"
                     onChange={() => changeValue(s)} // Gestion du changement pour chaque option

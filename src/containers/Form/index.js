@@ -27,6 +27,7 @@ const Form = ({ onSuccess, onError }) => {
       [field]: value,
     }));
   };
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const sendContact = useCallback(
     async (evt) => {
@@ -38,8 +39,8 @@ const Form = ({ onSuccess, onError }) => {
       if (
         !inputValue.nom ||
         !inputValue.prenom ||
-        !inputValue.email ||
         !inputValue.type ||
+        !inputValue.email ||
         !inputValue.message
       ) {
         Swal.fire({
@@ -49,6 +50,15 @@ const Form = ({ onSuccess, onError }) => {
         });
         setSending(false);
       } else {
+        if (!emailRegex.test(inputValue.email)) {
+          Swal.fire({
+            title: "Erreur",
+            text: "Veuillez mettre un email valide",
+            confirmButtonText: "ok",
+          });
+          setSending(false);
+          return;
+        }
         try {
           await mockContactApi();
           setSending(false);

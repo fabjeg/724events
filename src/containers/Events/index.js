@@ -11,7 +11,7 @@ const PER_PAGE = 9;
 
 const EventList = () => {
   const { data, error } = useData();
-  const [type, setType] = useState(null);
+  const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
   //  Le code vérifiait simplement l'index pour la pagination mais ne filtrait pas par type.
@@ -33,8 +33,8 @@ const EventList = () => {
   // const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   // Le nombre de pages était mal calculé, ce qui  donne un résultat incorrect.
 
-  const pageNumber = Math.ceil(filteredByType.length / PER_PAGE);
-  // En utilisant Math.ceil, on s'assure que le nombre de pages est
+  const pageNumber = Math.floor(filteredByType.length / PER_PAGE);
+  // On s'assure que le nombre de pages est
   // calculé correctement en fonction du nombre total d'événements
   //  filtrés (filteredByType), divisés par le nombre d'événements par page (PER_PAGE).
 
@@ -79,7 +79,7 @@ const EventList = () => {
             ))}
           </div>
           <div className="Pagination">
-            {[...Array(pageNumber)].map((_, n) => (
+            {[...Array(pageNumber || 0)].map((_, n) => (
               <a
                 key={`page-${n + 1}`} // Utilisation d'une clé basée sur le nombre de la page
                 href="#events"
