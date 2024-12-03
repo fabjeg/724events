@@ -18,3 +18,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Build folder
+/build
+
+# GitHub Pages cache
+.gh-pages-cache
